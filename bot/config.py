@@ -13,6 +13,10 @@ class Config:
     HEADLESS: bool = os.getenv("HEADLESS", "false").lower() in ("true", "1", "t")
     SESSION_DIR: str = os.getenv("SESSION_DIR", "./sessions")
 
+    # --- Lokalisasi ---
+    LOCALE: str = os.getenv("LOCALE", "id-ID")
+    TIMEZONE_ID: str = os.getenv("TIMEZONE_ID", "Asia/Jakarta")
+
     # --- Konfigurasi Proxy ---
     # Contoh: "http://user:pass@host:port"
     PROXY_URL: str | None = os.getenv("PROXY_URL")

@@ -48,9 +48,9 @@ async def _ensure_authenticated(account_id: str) -> tuple[BrowserContext, Page, 
         await session_manager.save_session(context, account_id)
         log.info("Sesi baru tersimpan. Melanjutkan verifikasi login.")
 
-    await page.goto("https://www.tiktok.com/foryou", wait_until="networkidle", timeout=60000)
+    await page.goto("https://www.tiktok.com/foryou", wait_until="networkidle", timeout=600000)
     try:
-        await page.wait_for_selector("a[href*='/profile']", timeout=15000)
+        await page.wait_for_selector("a[href*='/@bantupedia.id']", timeout=150000)
         log.info("Login terverifikasi. Siap menjalankan aksi.")
         return context, page, True
     except Exception:
