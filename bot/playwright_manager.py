@@ -1,6 +1,7 @@
 import asyncio
 from typing import Optional
 from playwright.async_api import async_playwright, Browser, BrowserContext, Page, Playwright
+from playwright_stealth import stealth_async
 
 from bot.config import config
 from bot.logger import log
@@ -66,29 +67,25 @@ class PlaywrightManager:
         log.info(f"Membuat konteks baru untuk akun: {account_id}")
         context = await self.browser.new_context(**context_options)
 
-        # Menambahkan skrip inisialisasi untuk menghindari deteksi bot
-        await context.add_init_script("""
-            if (navigator.webdriver) {
-                Object.defineProperty(navigator, 'webdriver', {
-                    get: () => false,
-                });
-            }
-        """)
+        # Skrip inisialisasi manual tidak lagi diperlukan karena playwright-stealth
+        # sudah menangani `navigator.webdriver` dan properti lainnya.
 
         return context
 
     async def new_page(self, context: BrowserContext) -> Page:
         """
-        Membuka halaman baru dalam konteks yang diberikan.
+        Membuka halaman baru dalam konteks yang diberikan dan menerapkan patch stealth.
 
         Args:
             context: Konteks browser.
 
         Returns:
-            Page baru.
+            Page baru yang sudah di-patch.
         """
-        log.info("Membuka halaman baru.")
-        return await context.new_page()
+        log.info("Membuka halaman baru dan menerapkan patch stealth.")
+        page = await context.new_page()
+        await stealth_async(page)
+        return page
 
     async def close(self) -> None:
         """

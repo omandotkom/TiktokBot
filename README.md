@@ -5,6 +5,7 @@ Repository ini adalah sebuah template siap pakai untuk membangun bot TikTok meng
 ## Fitur Utama
 
 - **Browser Automation**: Menggunakan **Playwright** untuk mengontrol browser secara non-headless (terlihat), yang penting untuk login awal dan debugging.
+- **Anti-Deteksi Bawaan**: Terintegrasi dengan **`playwright-stealth`** untuk secara otomatis menyamarkan jejak bot dari deteksi.
 - **Manajemen Sesi**: Menyimpan dan memuat sesi (cookies & local storage) per akun, mengurangi kebutuhan untuk login berulang kali.
 - **Humanizer Module**: Modul untuk mensimulasikan interaksi manusia, seperti delay acak, gerakan mouse, pola scroll, dan pengetikan yang natural.
 - **Captcha Solver Modular**: Dilengkapi dengan adapter captcha, termasuk solver dummy untuk development dan contoh integrasi ke layanan pihak ketiga (mis. 2Captcha).
@@ -44,7 +45,7 @@ Proyek ini menggunakan `pyproject.toml` untuk manajemen dependensi.
 ```bash
 pip install -e ".[dev]"
 ```
-Perintah di atas akan menginstall semua dependensi yang dibutuhkan untuk development, termasuk `pytest`.
+Perintah di atas akan menginstall semua dependensi yang dibutuhkan untuk development, termasuk `pytest` dan `playwright-stealth`.
 
 **Langkah 4: Install Browser Playwright**
 Playwright memerlukan browser khusus untuk bekerja. Perintah ini akan mengunduh browser yang diperlukan (Chromium secara default).
@@ -121,15 +122,15 @@ TikTokBot/
 
 - **Risiko**: Menggunakan bot untuk mengotomatisasi interaksi di platform sosial **melanggar Ketentuan Layanan (ToS)** mereka. Akun Anda berisiko **diblokir atau dihapus secara permanen**. Gunakan dengan risiko Anda sendiri.
 - **Etika**: Template ini disediakan untuk tujuan edukasi dan eksperimen. **Jangan gunakan untuk spam**, pelecehan, atau aktivitas jahat lainnya.
-- **Deteksi Bot**: TikTok memiliki mekanisme deteksi bot yang canggih. Template ini menggunakan beberapa teknik dasar (humanizer, user-agent) untuk mengurangi risiko, tetapi tidak menjamin keamanan. Deteksi dapat menargetkan:
+- **Deteksi Bot**: TikTok memiliki mekanisme deteksi bot yang canggih. Template ini secara default sudah terintegrasi dengan `playwright-stealth` untuk menyamarkan properti browser yang umum digunakan untuk deteksi. Namun, ini tidak menjamin keamanan 100%. Deteksi masih dapat menargetkan:
   - **IP Address**: Gunakan proxy berkualitas tinggi (residensial) untuk mengurangi jejak.
-  - **Fingerprinting**: Browser memiliki "sidik jari" unik. Untuk proyek serius, pertimbangkan library fingerprint spoofing.
+  - **Fingerprinting Tingkat Lanjut**: `playwright-stealth` menutupi banyak hal, tetapi situs canggih mungkin menggunakan teknik fingerprinting lain (mis. kanvas, WebGL).
   - **Pola Perilaku**: Hindari melakukan terlalu banyak aksi dalam waktu singkat. Gunakan `MAX_ACTIONS_PER_HOUR` dan jeda acak.
 
 ## 5. Langkah Lanjutan & Pengembangan
 
 Template ini adalah titik awal. Untuk membangun bot yang lebih tangguh, pertimbangkan:
-- **Fingerprint Spoofing**: Integrasikan library seperti `playwright-stealth` atau sejenisnya.
+- **Fingerprint Spoofing Lanjutan**: `playwright-stealth` sudah terpasang. Untuk keamanan lebih, riset dan terapkan konfigurasi atau library tambahan untuk memodifikasi sidik jari kanvas, WebGL, dan audio.
 - **Jadwal Acak**: Jalankan bot pada waktu yang tidak terduga, bukan setiap jam pada menit yang sama.
 - **Manajemen Antrian (Queue)**: Untuk mengelola banyak akun atau tugas, gunakan sistem antrian seperti Celery atau RQ.
 - **Monitoring & Alerting**: Siapkan sistem untuk memberi tahu Anda jika bot gagal login atau menghadapi captcha.
